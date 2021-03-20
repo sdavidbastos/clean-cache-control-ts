@@ -1,0 +1,27 @@
+/**
+ * Implementação de uso utilizando cache
+ */
+
+class LocalSavePurchases {
+  constructor(private readonly cacheStore: CacheStore) {}
+}
+
+interface CacheStore{
+  
+}
+
+/**
+ * Versão Mocada da interface CacheStore
+ * para fins de teste
+ */
+class CacheStoreSpy implements CacheStore {
+  deleteCallsCount = 0;
+}
+
+describe("LocalSavePurchases", () => {
+  test("Should not delete cache on sut.init", () => {
+    const cacheStore = new CacheStoreSpy();
+    new LocalSavePurchases(cacheStore);
+    expect(cacheStore.deleteCallsCount).toBe(0);
+  });
+});
