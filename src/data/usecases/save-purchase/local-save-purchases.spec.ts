@@ -4,11 +4,16 @@ import { CacheStore } from "@/data/protocols/cache/cache-store";
 class CacheStoreSpy implements CacheStore {
   deleteCallsCount = 0;
   insertCallsCount = 0;
-  key: string;
+  deleteKey: string;
+  insertKey: string;
 
   delete(key: string): void {
     this.deleteCallsCount++;
-    this.key = key;
+    this.deleteKey = key;
+  }
+  insert(key: string): void {
+    this.insertCallsCount++;
+    this.insertKey = key;
   }
 }
 
@@ -37,25 +42,31 @@ describe("LocalSavePurchases", () => {
     const { sut, cacheStore } = makeSut();
     await sut.save();
     expect(cacheStore.deleteCallsCount).toBe(1);
-    expect(cacheStore.key).toBe("purchase");
+    expect(cacheStore.deleteKey).toBe("purchases");
   });
 
-  test("Should not insert new Cache if delete fails", async () => {
+  test("Should not insert new Cache if delete fails", () => {
     const { sut, cacheStore } = makeSut();
     /**
-     * jest.spyOn()
-     * Vai espionar a instância e methodo delete
-     * mockImplementationOnce()
-     * Altera a implementação do methodo
-     * fazendo-o retornar uma função que vai retornar 
-     * um throw new Error.
-
+     * jest.spyOn(cacheStore, "delete").mockImplementationOnce()
+     * Espiona o metodo delete e caso esse metodo seja utilizado
+     * vai alterar a implementação dele para uma promise reject
      */
     jest.spyOn(cacheStore, "delete").mockImplementationOnce(() => {
       throw new Error();
     });
-    const promise = sut.save();
+    const promiseSut = sut.save();
+
     expect(cacheStore.insertCallsCount).toBe(0);
-    expect(promise).rejects.toThrow();
+    expect(promiseSut).rejects.toThrow();
+  });
+
+  test("Should insert new Cache if delete succeeds", async () => {
+    const { sut, cacheStore } = makeSut();
+    await sut.save();
+
+    expect(cacheStore.deleteCallsCount).toBe(1);
+    expect(cacheStore.insertCallsCount).toBe(1);
+    expect(cacheStore.insertKey).toBe("purchases");
   });
 });
