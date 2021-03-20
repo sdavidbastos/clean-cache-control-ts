@@ -1,23 +1,5 @@
-/**
- * Implementação de uso utilizando cache
- */
-
-class LocalSavePurchases {
-  constructor(private readonly cacheStore: CacheStore) {}
-
-  async save(): Promise<void> {
-    this.cacheStore.delete("purchase");
-  }
-}
-
-interface CacheStore {
-  delete: (key: string) => void;
-}
-
-/**
- * Versão Mocada da interface CacheStore
- * para fins de teste
- */
+import { LocalSavePurchases } from "@/data/usecases/save-purchase/local-save-purchases";
+import { CacheStore } from "@/data/protocols/cache/cache-store";
 class CacheStoreSpy implements CacheStore {
   deleteCallsCount = 0;
   key: string;
