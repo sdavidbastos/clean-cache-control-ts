@@ -9,10 +9,12 @@ export class CacheStoreSpy implements CacheStore {
   fetchKey: string;
 
   insertValues: Array<SavePurchases.Params> = [];
+  fetchResult: any;
 
-  fetch(key: string): void {
+  fetch(key: string): any {
     this.actions.push(CacheStoreSpy.Action.fetch);
     this.fetchKey = key;
+    return this.fetchResult;
   }
 
   delete(key: string): void {
@@ -43,7 +45,7 @@ export class CacheStoreSpy implements CacheStore {
       throw new Error();
     });
   }
-  
+
   simulateInsertError(): void {
     jest.spyOn(CacheStoreSpy.prototype, "insert").mockImplementationOnce(() => {
       this.actions.push(CacheStoreSpy.Action.insert);
