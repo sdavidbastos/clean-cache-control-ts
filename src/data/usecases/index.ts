@@ -1,1 +1,1 @@
-export * from "./load-purchase/local-save-purchases"
+export * from "./load-purchase/local-load-purchases"

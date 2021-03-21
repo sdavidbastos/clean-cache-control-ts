@@ -1,4 +1,4 @@
-import { LocalLoadPurchases } from "@/data/usecases/load-purchase/local-save-purchases";
+import { LocalLoadPurchases } from "@/data/usecases/load-purchase/local-load-purchases";
 import { mockPurchases, CacheStoreSpy } from "@/data/tests";
 
 type SutTypes = {
