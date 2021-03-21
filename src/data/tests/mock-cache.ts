@@ -20,6 +20,11 @@ export class CacheStoreSpy implements CacheStore {
     this.insertValues = value;
   }
 
+  replace(key: string, value: any) {
+    this.delete(key);
+    this.insert(key, value);
+  }
+
   /**
    * jest.spyOn().mockImplementationOnce()
    * Espiona o metodo delete e caso esse metodo seja utilizado
