@@ -1,5 +1,6 @@
 import { LocalSavePurchases } from "@/data/usecases/save-purchase/local-save-purchases";
 import { mockPurchases, CacheStoreSpy } from "@/data/tests";
+import { timeStamp } from "node:console";
 
 type SutTypes = {
   sut: LocalSavePurchases;
@@ -7,9 +8,9 @@ type SutTypes = {
 };
 
 // Design Pattern factory
-const makeSut = (): SutTypes => {
+const makeSut = (timestamp = new Date()): SutTypes => {
   const cacheStore = new CacheStoreSpy();
-  const sut = new LocalSavePurchases(cacheStore);
+  const sut = new LocalSavePurchases(cacheStore, timestamp);
   return {
     sut,
     cacheStore,
@@ -32,7 +33,8 @@ describe("LocalSavePurchases", () => {
   });
 
   test("Should insert new Cache if delete succeeds", async () => {
-    const { sut, cacheStore } = makeSut();
+    const timestamp = new Date();
+    const { sut, cacheStore } = makeSut(timestamp);
     const purchases = mockPurchases();
     await sut.save(purchases);
 
@@ -43,7 +45,10 @@ describe("LocalSavePurchases", () => {
     expect(cacheStore.deleteKey).toBe("purchases");
     expect(cacheStore.insertKey).toBe("purchases");
     // toEqual: Comparar arrays, objetos ou array de objetos
-    expect(cacheStore.insertValues).toEqual(purchases);
+    expect(cacheStore.insertValues).toEqual({
+      timestamp,
+      value: purchases,
+    });
   });
 
   test("Should throws if insert throws", async () => {
