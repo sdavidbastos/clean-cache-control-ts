@@ -9,7 +9,7 @@ export interface SavePurchases {
  * Hack para utilizar o type dentro
  * da interface SavePurchases
  */
-namespace SavePurchases {
+export namespace SavePurchases {
   export type Params = {
     id: string;
     date: Date;
