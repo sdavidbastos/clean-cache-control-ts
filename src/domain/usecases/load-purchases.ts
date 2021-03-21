@@ -4,13 +4,13 @@ import { PurchaseModel } from "@/domain/models";
  * Aqui só teremos interfaces e modelos.
  */
 
-export interface SavePurchases {
-  save: (purchases: Array<SavePurchases.Params>) => Promise<void>;
+export interface LoadPurchases {
+  loadAll: () => Promise<Array<LoadPurchases.Result>>;
 }
 /**
  * Hack para utilizar o type dentro
  * da interface SavePurchases
  */
-export namespace SavePurchases {
-  export type Params = PurchaseModel;
+export namespace LoadPurchases {
+  export type Result = PurchaseModel;
 }
