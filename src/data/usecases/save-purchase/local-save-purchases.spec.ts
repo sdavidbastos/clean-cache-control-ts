@@ -1,6 +1,5 @@
 import { LocalSavePurchases } from "@/data/usecases/save-purchase/local-save-purchases";
 import { mockPurchases, CacheStoreSpy } from "@/data/tests";
-import { timeStamp } from "node:console";
 
 type SutTypes = {
   sut: LocalSavePurchases;
@@ -36,7 +35,7 @@ describe("LocalSavePurchases", () => {
     const timestamp = new Date();
     const { sut, cacheStore } = makeSut(timestamp);
     const purchases = mockPurchases();
-    await sut.save(purchases);
+    const promise = sut.save(purchases);
 
     expect(cacheStore.messages).toEqual([
       CacheStoreSpy.Message.delete,
@@ -49,6 +48,7 @@ describe("LocalSavePurchases", () => {
       timestamp,
       value: purchases,
     });
+    await expect(promise).resolves.toBeFalsy();
   });
 
   test("Should throws if insert throws", async () => {
