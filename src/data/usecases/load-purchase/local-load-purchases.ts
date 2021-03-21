@@ -5,8 +5,8 @@ import { LoadPurchases, SavePurchases } from "@/domain/usecases";
  * Implementação de uso utilizando cache
  */
 
-export class LocalLoadPurchases implements SavePurchases {
-  private readonly key = "purchases"
+export class LocalLoadPurchases implements SavePurchases, LoadPurchases {
+  private readonly key = "purchases";
   constructor(
     private readonly cacheStore: CacheStore,
     private readonly timestamp: Date
@@ -19,7 +19,13 @@ export class LocalLoadPurchases implements SavePurchases {
     });
   }
 
-  async loadAll(): Promise<void> {
-    this.cacheStore.fetch(this.key);
+  async loadAll(): Promise<Array<LoadPurchases.Result>> {
+    try {
+      this.cacheStore.fetch(this.key);
+      return [];
+    } catch (error) {
+      this.cacheStore.delete(this.key)
+      return [];
+    }
   }
 }
